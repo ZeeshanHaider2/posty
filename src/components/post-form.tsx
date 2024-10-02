@@ -13,8 +13,8 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import { Textarea } from "@/components/ui/textarea"
-
+import { Textarea } from "@/components/ui/textarea";
+import * as actions from "@/actions";
 
 export const PostForm = () => {
     // 1. Define your form.
@@ -24,19 +24,19 @@ export const PostForm = () => {
       post: "",
     },
   })
-  function onSubmit(values:Zod.infer<typeof PstSchema>){
-    console.log('values',values);
+  function onSubmit(values:Zod.infer<typeof PostSchema>){
+    //console.log('values',values);
+    actions.CreatePost(values);
   }
   return (
     <div>
         <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 w-6/12 mt-8">
         <FormField
           control={form.control}
           name="post"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Username</FormLabel>
               <FormControl>
                  <Textarea
                   placeholder="write your post..." {...field}>
@@ -48,7 +48,7 @@ export const PostForm = () => {
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button type="submit" className="float-right">Submit</Button>
       </form>
     </Form>
     </div>
