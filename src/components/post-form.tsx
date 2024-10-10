@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react";
 import { PostSchema} from "@/schema";
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -10,13 +11,16 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form"
 import { Textarea } from "@/components/ui/textarea";
 import * as actions from "@/actions";
+import { useToast } from "@/hooks/use-toast"
+
 
 export const PostForm = () => {
+  const { toast } = useToast();
+  const [success,setSuccess] = useState<string| undefined>("")
     // 1. Define your form.
   const form = useForm<z.infer<typeof PostSchema>>({
     resolver: zodResolver(PostSchema),
@@ -26,7 +30,15 @@ export const PostForm = () => {
   })
   function onSubmit(values:Zod.infer<typeof PostSchema>){
     //console.log('values',values);
-    actions.CreatePost(values);
+    actions.CreatePost(values).then((data)=>{
+      setSuccess(data?.success);
+    });
+
+    toast({
+      title: "Posted",
+      description: `${success}`,
+    });
+    form.reset();
   }
   return (
     <div>
